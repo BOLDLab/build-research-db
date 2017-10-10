@@ -1,0 +1,40 @@
+{
+  "name": "build-research-db",
+  "version": "1.0.0",
+  "description": "Builds the MySQL DB from sqlite3 files ",
+  "main": "index.js",
+  "scripts": {
+    "test": "test/start.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/BOLDLab/build-research-db.git"
+  },
+  "keywords": [
+    "NewcastleX",
+    "mySQL",
+    "sqlite",
+    "edX"
+  ],
+  "author": "Paul Sijpkes",
+  "license": "SEE LICENSE IN LICENSE",
+  "bugs": {
+    "url": "https://github.com/BOLDLab/build-research-db/issues"
+  },
+  "homepage": "https://github.com/BOLDLab/build-research-db#readme",
+  "devDependencies": {
+    "babel": "^6.23.0",
+    "chai": "^4.1.2",
+    "mocha": "^4.0.1"
+  },
+  "directories": {
+    "example": "examples",
+    "lib": "lib",
+    "test": "test"
+  },
+  "dependencies": {
+    "mysql2": "^1.4.2",
+    "sequelize": "^4.13.5",
+    "sqlite3": "^3.1.13"
+  }
+}
