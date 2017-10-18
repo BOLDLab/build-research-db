@@ -5,7 +5,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-model_schemas/
+model_schemas/sqlite/
+db/
 
 # Runtime data
 pids
@@ -58,3 +59,7 @@ typings/
 
 # dotenv environment variables file
 .env
+
+.jshintrc
+.tern-project
+.jshint
