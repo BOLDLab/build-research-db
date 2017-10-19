@@ -10,7 +10,6 @@ module.exports = {
         fs.readdir(
             this.sqlite_folder, (err, files) => {
               files.forEach((file, i) => {
-                    console.log("Processing "+file);
                     const a = file.split('.');
                     const table_name = a[0];
 
@@ -19,7 +18,6 @@ module.exports = {
                   callback(this.sqlite_models);
               }
         );
-
     },
     load_mysql_models: function() {
       fs.readdir(

@@ -26,18 +26,17 @@ module.exports = {
           const courses = require(path);
           const courses_model = courses(mysql_orm, sequelize.DataTypes);
 
-            courses_model.findAll().then(result => {
-                result.forEach((v) => {
-                    _courses.push(v.id);
-                    console.log(courses);
-                });
-                callback();
-            });
+          courses_model.findAll().then(result => {
+              result.forEach((v) => {
+                  _courses.push(v.id);
+              });
+              callback();
+          });
       },
       create_course: (entry, courses_model) => {
         courses_model.create(entry, {updateOnDuplicate: true, logging: false})
         .then((result)=> {
-            console.log("Course entered");
+            //console.log("Course entered");
         }).catch((err) => {
             console.error(err);
             process.exit();
@@ -47,7 +46,7 @@ module.exports = {
             if(!_courses.includes(id)) {
                 callback();
             } else {
-                console.log("+++ Course "+id+" exists already.");
+            //    console.log("+++ Course "+id+" exists already.");
                 return false;
             }
       },
@@ -55,7 +54,7 @@ module.exports = {
           let model = Object.assign({}, this.model_base);
           const collection = [];
           const keys_used = [];
-          console.log("Consolidating "+sqlite_table+" to MySQL...")
+  //        console.log("Consolidating "+sqlite_table+" to MySQL...")
 
           const a = sqlite_table.split('_');
           let course_id = "course-v1:"+a[0]+"+"+a[1]+"+"+a[2];
@@ -68,7 +67,7 @@ module.exports = {
           let courses_model = courses(mysql_orm, sequelize.DataTypes);
 
           module.exports.ifIdUniqueDo(course_id, () => {
-                  console.log("Creating course entry for "+course_id);
+            //      console.log("Creating course entry for "+course_id);
                   _courses.push(course_id);
                   module.exports.create_course({
                         id: course_id,
@@ -79,10 +78,10 @@ module.exports = {
 
           const tb_path = './model_schemas/mysql/'+mysql_table + '.js';
 
-          console.log("Processing for "+course_id);
-          console.log("MYSQL table: "+mysql_table);
+        //  console.log("Processing for "+course_id);
+        //  console.log("MYSQL table: "+mysql_table);
 
-          console.log("RES LENGTH: "+result.length);
+        //  console.log("RES LENGTH: "+result.length);
         //  let count = 0;
           result.forEach((val) =>
               {
@@ -98,9 +97,7 @@ module.exports = {
                         }
                         if(_i_key == "id") {
                             if(! record[_i_key] || record[_i_key].toLowerCase().trim() == 'null' || String(record[_i_key]).trim() == '0') {
-                              console.log("Removing non-UID'd record ");
-                              console.log(record);
-                            //  bad_record = true;
+                              uid = null;
                             } else {
                               uid = record[_i_key];
                             }
