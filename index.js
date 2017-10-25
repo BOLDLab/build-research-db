@@ -8,19 +8,18 @@ const clui = require('clui');
 
 const sqlite_orm = new sequelize('newcastlex_research.db', '', '', {
   dialect: 'sqlite',
-  storage: './db/newcastlex_research.db',
+  storage: process.env.EDI_BASE_DIR+'build-research-db/db/newcastlex_research.db',
   operatorsAliases: false,
   logging: false
 });
-const mysql_orm = new sequelize('edx_research', 'edx_research', 'wN4Q5m2a', {
+const mysql_orm = new sequelize(config.mysql_db, config.mysql_user, process.env.MYSQL_PASSWORD, {
   host: config.mysql_host,
   port: config.mysql_port ? config.mysql_port : 3306,
   dialect: 'mysql',
   pool: {
     max: 5,
     min: 1,
-    idle: 30,
-    //acquire: 0
+    idle: 30
   },
   operatorsAliases: false,
   logging: false
@@ -32,11 +31,9 @@ const _progress = {};
 const chunkSize = 1000;
 let prevPointer = 0;
 let outputStr = "";
-let startStr = 0, endStr = 0;
+
 const processChunk = function(result, pointer, _model, mysql_model, model_list, transaction) {
-  const chunk = result.collection.slice(prevPointer, pointer);
-
-
+const chunk = result.collection.slice(prevPointer, pointer);
 
   mysql_model.bulkCreate(chunk, {
       updateOnDuplicate: true,
@@ -53,7 +50,7 @@ const processChunk = function(result, pointer, _model, mysql_model, model_list, 
     outputStr = outputStr.replace(/Processing [\[0-9 to\]]+/, "Processing ["+(prevPointer-1) + " to " + pointer +"]");
 
     if (pointer > prevPointer) {
-        log_update(outputStr + "\n\n" + _progress[_model['key']].update(prevPointer / result.collection.length));
+        log_update(outputStr + "\n\n" + _progress[_model.key].update(prevPointer / result.collection.length));
         processChunk(result, pointer, _model, mysql_model, model_list, transaction);
     } else {
         outputStr = "\n\n----------\n\nTransfer to MySQL table " + result.path + " complete.\nSQLite tables remaining: " + String(Number(model_list.length)+"\n");
@@ -61,18 +58,18 @@ const processChunk = function(result, pointer, _model, mysql_model, model_list, 
         _process_table_records(model_list);
     }
   }).catch((err) => {
-    console.error("ERROR on model " + _model['key']);
+    console.error("ERROR on model " + _model.key);
     console.error(err);
     process.exit(1);
   });
 
   prevPointer = pointer;
-}
+};
 
 const process_sqlite_tables = (result, _model, model_list) => {
   const length = result.length;
 
-  result_handler.map_to_mysql(result, mysql_orm, _model['key'], _model,
+  result_handler.map_to_mysql(result, mysql_orm, _model.key, _model,
     (result) => {
         const t = null;
         const collection = [];
@@ -85,16 +82,16 @@ const process_sqlite_tables = (result, _model, model_list) => {
         let pointer = 1000;
 
         if (result.count == 0) {
-          //console.log("SQLite table is empty.");
           _process_table_records(model_list);
           return;
         }
 
-        outputStr += length + " records to be transferred\n";
+        outputStr += "SQLite table: "+_model.key;
+        outputStr += "\n"+length + " records to be transferred\n";
         outputStr += "Cleaned length: " + result.count + "\n";
 
         if (!fs.existsSync(path)) {
-          console.log(path + "does not exist.");
+          console.log(path + " does not exist.");
           return false;
         }
 
@@ -118,7 +115,7 @@ const _process_table_records = function(model_list) {
     return false;
   }
 
-  _model['fn'](sqlite_orm, sequelize.DataTypes)
+  _model.fn(sqlite_orm, sequelize.DataTypes)
     .findAll().then((result) => {
       process_sqlite_tables(result, _model, model_list);
     });

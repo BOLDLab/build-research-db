@@ -12,7 +12,7 @@ const column_base = {
 
 const _courses = [];
 
-const path = "../model_schemas/mysql/courses.js";
+const path = process.env.EDI_BASE_DIR+"build-research-db/model_schemas/mysql/courses.js";
 
 module.exports = {
       model_base: {
@@ -76,7 +76,7 @@ module.exports = {
                   }, courses_model);
           });
 
-          const tb_path = './model_schemas/mysql/'+mysql_table + '.js';
+          const tb_path = process.env.EDI_BASE_DIR+'build-research-db/model_schemas/mysql/'+mysql_table + '.js';
 
         //  console.log("Processing for "+course_id);
         //  console.log("MYSQL table: "+mysql_table);

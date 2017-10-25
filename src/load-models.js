@@ -2,8 +2,8 @@ const fs = require('fs');
 const sequelize = require('sequelize');
 
 module.exports = {
-    sqlite_folder: "../model_schemas/sqlite/",
-    mysql_folder: "../model_schemas/mysql/",
+    sqlite_folder: process.env.EDI_BASE_DIR+"build-research-db/model_schemas/sqlite/",
+    mysql_folder: process.env.EDI_BASE_DIR+"build-research-db/model_schemas/mysql/",
     mysql_models: [],
     sqlite_models: [],
     load_sqlite_models: function(callback)  {
